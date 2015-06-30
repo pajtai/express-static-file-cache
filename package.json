@@ -1,5 +1,5 @@
 {
-  "name": "express-static-cache",
+  "name": "express-static-file-cache",
   "version": "0.0.0",
   "description": "Express middleware that creates a static html cache from jade templating.",
   "main": "index.js",
@@ -16,6 +16,6 @@
   },
   "repository": {
     "type": "git",
-    "url": "git@github.com:pajtai/express-static-cache.git"
-  },
+    "url": "git@github.com:pajtai/express-static-file-cache.git"
+  }
 }

@@ -1,10 +1,10 @@
-# express-static-cache
+# express-static-file-cache
 
 ```
-npm install --save express-static-cache
+npm install --save express-static-file-cache
 ```
 
-Middleware to cache your jade templates as static html. The api gives you the ability to wholesale clear the cache as
+Middleware to cache your Jade templates as static html. The api gives you the ability to wholesale clear the cache as
 needed. As a side effect, also gives you the ability to pod organize your jade templates with the middlewares that show them.
 
 Streaming to return content to the user is faster than compiling the entire response first. Static files are streamed
@@ -15,7 +15,7 @@ a static html page will be faster than templating that doesn't support streaming
 
 `configure` and `clearCache` are available directly from the npm.
 
-### require('express-static-cache').configure({ ... })
+### require('express-static-file-cache').configure({ ... })
 
 Configure return a middleware function to use in your app.
 
@@ -30,7 +30,7 @@ Configure return a middleware function to use in your app.
 var express = require('express'),
     app = express();
     
-app.use(require('express-static-cache')({
+app.use(require('express-static-file-cache')({
     app         : app,
     express     : express,
     cacheDir    : cacheDir
@@ -47,7 +47,7 @@ function(req, res, next) {
 }
 ```
 
-### require('express-static-cache').clearCache()
+### require('express-static-file-cache').clearCache()
 
 Calling this method will delete all static cache files.
 Returns a promise that is resolved once all files are cleared.
@@ -55,7 +55,7 @@ Returns a promise that is resolved once all files are cleared.
 clearCache is available both directly from the npm and on the response object:
 
 ```javascript
-var staticCache = require('express-static-cache')
+var staticCache = require('express-static-file-cache')
 
 db.on('content-changed', function() {
     staticCache.clearCache();
