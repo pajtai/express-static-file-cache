@@ -1,0 +1,21 @@
+{
+  "name": "express-static-cache",
+  "version": "0.0.0",
+  "description": "Express middleware that creates a static html cache from jade templating.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Peter Ajtai <peter.ajtai@thinksolid.com>",
+  "license": "ISC",
+  "dependencies": {
+    "bluebird": "^2.9.30",
+    "jade": "^1.11.0",
+    "mkdirp": "^0.5.1",
+    "rimraf": "^2.4.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:pajtai/express-static-cache.git"
+  },
+}
