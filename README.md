@@ -43,7 +43,7 @@ Now in your downstream middleware:
 var path = require('path');
 
 function(req, res, next) {
-    res.cache(path.join(__dirname, 'view.jade');
+    res.cache(require.resolve('./view.jade', data);
 }
 ```
 
@@ -93,7 +93,7 @@ html file with that repsonse to `path.join(req.url, 'index.html');
 
 ```javascript
 function(req, res, next) {
-    res.cache(path.join(__dirname, 'view.jade'), {
+    res.cache(require.resolve('./view.jade'), {
         name : 'jane'
     });
 ```    
@@ -106,7 +106,7 @@ Deletes all static cache fiels and returns a promise that is resolved once done.
 
 Since `res.cache` takes a path to the Jade file to be used, you can modularize your jade templates.
 
-For example if you always call `res.cache(path.join(__dirname, 'view.jade'), data)`, you can organize your "pages" as
+For example if you always call `res.cache(require.resolve('./view.jade'), data)`, you can organize your "pages" as
 follows:
 
     pages
