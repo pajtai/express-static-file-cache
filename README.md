@@ -25,6 +25,7 @@ Configure return a middleware function to use in your app.
 * `cacheDir` : required - path to root directory of cache
 * `express`  : required - express
 * `verbose`  : optional - if truthy will console log some extra info
+* `dev`      : options - defaults to false - true will send the response but not cache it to a file
 
 ```javascript
 var express = require('express'),

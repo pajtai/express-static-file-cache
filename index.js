@@ -11,7 +11,8 @@ var jade = require('jade'),
     clearOnStart,
     verbose,
     express,
-    app;
+    app,
+    dev;
 
 module.exports = {
     clearCache  : clearCache,
@@ -26,6 +27,7 @@ function configure(options) {
     verbose         = !! options.verbose;               // truthy value give some console logs
     express         = options.express;
     app             = options.app;
+    dev             = !! options.dev;
 
     verbose && console.log('adding static cache at:', cacheDir);
     app.use(express.static(cacheDir));
@@ -73,17 +75,19 @@ function createCache(req, res, cacheDir, verbose) {
 
         verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
 
-        BB
-            .try(function() {
-                return mkdirp(cachePath);
-            })
-            .then(function() {
-                return fs.writeFileAsync(cacheFile, templatedString);
-            })
-            .catch(function(error) {
-                console.log('express static cache error:', error);
-                console.log(new Error().stack);
-            });
+        if (!dev) {
+            BB
+                .try(function() {
+                    return mkdirp(cachePath);
+                })
+                .then(function() {
+                    return fs.writeFileAsync(cacheFile, templatedString);
+                })
+                .catch(function(error) {
+                    console.log('express static cache error:', error);
+                    console.log(new Error().stack);
+                });
+        }
 
         res.send(templatedString);
     };
