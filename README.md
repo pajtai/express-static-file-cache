@@ -21,11 +21,12 @@ Configure return a middleware function to use in your app.
 
 #### options
 
-* `app`      : required - the express app being used
-* `cacheDir` : required - path to root directory of cache
-* `express`  : required - express
-* `verbose`  : optional - if truthy will console log some extra info
-* `dev`      : options - defaults to false - true will send the response but not cache it to a file
+* `app`        : required - the express app being used
+* `cacheDir`   : required - path to root directory of cache
+* `express`    : required - express
+* `verbose`    : optional - if truthy will console log some extra info
+* `viewEngine` : optional - defaults to jade – options: 'jade' or 'ejs' 
+* `dev`        : options - defaults to false - true will send the response but not cache it to a file
 
 ```javascript
 var express = require('express'),
