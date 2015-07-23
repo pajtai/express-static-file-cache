@@ -31,7 +31,7 @@ Configure return a middleware function to use in your app.
 var express = require('express'),
     app = express();
     
-app.use(require('express-static-file-cache')({
+app.use(require('express-static-file-cache').configure({
     app         : app,
     express     : express,
     cacheDir    : cacheDir
