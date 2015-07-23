@@ -4,11 +4,11 @@
 npm install --save express-static-file-cache
 ```
 
-Middleware to cache your Jade templates as static html. The api gives you the ability to wholesale clear the cache as
+Middleware to cache your Jade or EJS templates as static html. The api gives you the ability to wholesale clear the cache as
 needed. As a side effect, also gives you the ability to pod organize your jade templates with the middlewares that show them.
 
 Streaming to return content to the user is faster than compiling the entire response first. Static files are streamed
-by default in express, but Jade templates do not support streaming. So, even if you cache all database interactions,
+by default in express, but many templates do not support streaming. So, even if you cache all database interactions,
 a static html page will be faster than templating that doesn't support streaming.
 
 ## Api
