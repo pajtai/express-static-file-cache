@@ -12,6 +12,7 @@ var jade = require('jade'),
     verbose,
     express,
     app,
+    viewEngine,
     dev;
 
 module.exports = {
@@ -27,6 +28,7 @@ function configure(options) {
     verbose         = !! options.verbose;               // truthy value give some console logs
     express         = options.express;
     app             = options.app;
+    viewEngine      = options.hasOwnProperty('viewEngine') ? options.viewEngine : 'jade';       // currently jade and ejs supported
     dev             = !! options.dev;
 
     verbose && console.log('adding static cache at:', cacheDir);
@@ -42,7 +44,7 @@ function configure(options) {
             });
     }
 
-    return createMiddleware(cacheDir, verbose);
+    return createMiddleware(cacheDir, verbose, viewEngine);
 }
 
 function clearCache() {
@@ -50,12 +52,12 @@ function clearCache() {
     return rimraf(cacheDir);
 }
 
-function createMiddleware(cacheDir, verbose) {
+function createMiddleware(cacheDir, verbose, viewEngine) {
     return function (req, res, next) {
 
         clearStartupCache
             .then(function() {
-                res.cache = createCache(req, res, cacheDir, verbose);
+                res.cache = createCache(req, res, cacheDir, verbose, viewEngine);
                 res.clearCache = clearCache;
                 next();
             })
@@ -66,29 +68,66 @@ function createMiddleware(cacheDir, verbose) {
     };
 }
 
-function createCache(req, res, cacheDir, verbose) {
-    return function(filePath, data) {
-        var templateFunction    = jade.compileFile(filePath),
-            templatedString     = templateFunction(data),
-            cachePath           = path.join(cacheDir, req.url),
-            cacheFile           = path.join(cachePath, 'index.html');
+function createCache(req, res, cacheDir, verbose, viewEngine) {
+    return function(filePath, data) {        
+        console.log(viewEngine);
 
-        verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
+        if(viewEngine === "ejs") {
+            require("ejs").renderFile(filePath, data, function(err, result) {                
+                if (!err) {
+                    var templatedString = result;                
+                    var cachePath           = path.join(cacheDir, req.originalUrl);
+                    var cacheFile           = path.join(cachePath, 'index.html');
 
-        if (!dev) {
-            BB
-                .try(function() {
-                    return mkdirp(cachePath);
-                })
-                .then(function() {
-                    return fs.writeFileAsync(cacheFile, templatedString);
-                })
-                .catch(function(error) {
-                    console.log('express static cache error:', error);
-                    console.log(new Error().stack);
-                });
+                    verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
+
+                    if (!dev) {
+                        BB
+                            .try(function() {
+                                return mkdirp(cachePath);
+                            })
+                            .then(function() {
+                                return fs.writeFileAsync(cacheFile, templatedString);
+                            })
+                            .catch(function(error) {
+                                console.log('express static cache error:', error);
+                                console.log(new Error().stack);
+                            });
+                    }
+
+                    res.send(templatedString);           
+        
+                } else {
+                    console.log(err.toString());
+                    res.send("EJS compile error: ", err);
+                }
+
+            });            
+
+        } else {
+
+            var templateFunction    = jade.compileFile(filePath),
+                templatedString     = templateFunction(data),
+                cachePath           = path.join(cacheDir, req.originalUrl),
+                cacheFile           = path.join(cachePath, 'index.html');
+
+            verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
+
+            if (!dev) {
+                BB
+                    .try(function() {
+                        return mkdirp(cachePath);
+                    })
+                    .then(function() {
+                        return fs.writeFileAsync(cacheFile, templatedString);
+                    })
+                    .catch(function(error) {
+                        console.log('express static cache error:', error);
+                        console.log(new Error().stack);
+                    });
+            }
+
+            res.send(templatedString);
         }
-
-        res.send(templatedString);
     };
 }

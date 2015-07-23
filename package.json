@@ -10,6 +10,7 @@
   "license": "ISC",
   "dependencies": {
     "bluebird": "^2.9.30",
+    "ejs": "^2.3.3",
     "jade": "^1.11.0",
     "mkdirp": "^0.5.1",
     "rimraf": "^2.4.0"
