@@ -1,6 +1,6 @@
 {
   "name": "express-static-file-cache",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Express middleware that creates a static html cache from jade templating.",
   "main": "index.js",
   "scripts": {
