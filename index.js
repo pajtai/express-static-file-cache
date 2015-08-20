@@ -75,8 +75,9 @@ function createCache(req, res, cacheDir, verbose, viewEngine) {
         if(viewEngine === "ejs") {
             require("ejs").renderFile(filePath, data, function(err, result) {                
                 if (!err) {
-                    var templatedString = result;                
-                    var cachePath           = path.join(cacheDir, req.originalUrl);
+                    var templatedString = result;           
+                    // Should cache without the query params so use req.path and not req.originalUrl
+                    var cachePath           = path.join(cacheDir, req.path);
                     var cacheFile           = path.join(cachePath, 'index.html');
 
                     verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
@@ -108,7 +109,8 @@ function createCache(req, res, cacheDir, verbose, viewEngine) {
 
             var templateFunction    = jade.compileFile(filePath),
                 templatedString     = templateFunction(data),
-                cachePath           = path.join(cacheDir, req.originalUrl),
+                // Should cache without the query params so use req.path and not req.originalUrl
+                cachePath           = path.join(cacheDir, req.path),
                 cacheFile           = path.join(cachePath, 'index.html');
 
             verbose && console.log('cache path', cachePath, 'cache file', cacheFile);
