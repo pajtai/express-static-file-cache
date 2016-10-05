@@ -1,7 +1,6 @@
 'use strict';
 
-var jade = require('jade'),
-    BB = require('bluebird'),
+var BB = require('bluebird'),
     fs = BB.promisifyAll(require('fs')),
     path = require('path'),
     rimraf = BB.promisify(require('rimraf')),
@@ -69,13 +68,15 @@ function createMiddleware(cacheDir, verbose, viewEngine) {
 }
 
 function createCache(req, res, cacheDir, verbose, viewEngine) {
-    return function(filePath, data) {        
-        console.log(viewEngine);
+    return function(filePath, data) {
+
+        viewEngine = viewEngine.toLowerCase();
+        verbose && console.log(viewEngine);
 
         if(viewEngine === "ejs") {
-            require("ejs").renderFile(filePath, data, function(err, result) {                
+            require("ejs").renderFile(filePath, data, function(err, result) {
                 if (!err) {
-                    var templatedString = result;           
+                    var templatedString = result;
                     // Should cache without the query params so use req.path and not req.originalUrl
                     var cachePath           = path.join(cacheDir, req.path);
                     var cacheFile           = path.join(cachePath, 'index.html');
@@ -96,18 +97,34 @@ function createCache(req, res, cacheDir, verbose, viewEngine) {
                             });
                     }
 
-                    res.send(templatedString);           
-        
+                    res.send(templatedString);
+
                 } else {
                     console.log(err.toString());
                     res.send("EJS compile error: ", err);
                 }
 
-            });            
+            });
 
-        } else {
+        } else if (['jade', 'pug'].indexOf(viewEngine) > -1) {
 
-            var templateFunction    = jade.compileFile(filePath),
+            var templateHandler = null,
+                fallback = false;
+
+            //grab either jade or pug
+            try {
+                templateHandler = require(viewEngine);
+            }catch(err) {
+                fallback = viewEngine === 'jade' ? 'pug' : 'jade';
+                console.log('Could not find viewEngine "' + viewEngine + '". Trying "' + fallback + '"');
+                console.log('Module load error: ' + err.toString());
+            }
+
+            if (fallback !== false) {
+                templateHandler = require(fallback);
+            }
+
+            var templateFunction    = templateHandler.compileFile(filePath),
                 templatedString     = templateFunction(data),
                 // Should cache without the query params so use req.path and not req.originalUrl
                 cachePath           = path.join(cacheDir, req.path),
@@ -130,6 +147,8 @@ function createCache(req, res, cacheDir, verbose, viewEngine) {
             }
 
             res.send(templatedString);
+        } else {
+            throw new Error('View engine "' + viewEngine + '" is invalid. Cannot continue.');
         }
     };
 }
