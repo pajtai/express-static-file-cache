@@ -4,7 +4,7 @@
 npm install --save express-static-file-cache
 ```
 
-Middleware to cache your Jade, EJS, or other [Express compliant templates](https://www.npmjs.com/package/consolidate) as static html. The api gives you the ability to wholesale clear the cache as
+Middleware to cache your Pug, Jade, EJS, or other [Express compliant templates](https://www.npmjs.com/package/consolidate) as static html. The api gives you the ability to wholesale clear the cache as
 needed. As a side effect, also gives you the ability to pod organize your jade templates with the middlewares that show them.
 
 Streaming to return content to the user is faster than compiling the entire response first. Static files are streamed
@@ -25,7 +25,7 @@ Configure return a middleware function to use in your app.
 * `cacheDir`   : required - path to root directory of cache
 * `express`    : required - express
 * `verbose`    : optional - if truthy will console log some extra info
-* `viewEngine` : optional - defaults to jade – options: 'jade' or 'ejs' 
+* `viewEngine` : optional - defaults to pug – options: 'pug', 'jade', or 'ejs' - fallsback to jade if pug is not present and vice versa (in case you are not passing in `viewEngine` and relying on the default)
 * `dev`        : options - defaults to false - true will send the response but not cache it to a file
 
 ```javascript
