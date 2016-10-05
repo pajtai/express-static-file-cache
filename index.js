@@ -27,7 +27,7 @@ function configure(options) {
     verbose         = !! options.verbose;               // truthy value give some console logs
     express         = options.express;
     app             = options.app;
-    viewEngine      = options.hasOwnProperty('viewEngine') ? options.viewEngine : 'jade';       // currently jade and ejs supported
+    viewEngine      = options.hasOwnProperty('viewEngine') ? options.viewEngine : 'pug';       // currently pug, jade, and ejs supported
     dev             = !! options.dev;
 
     verbose && console.log('adding static cache at:', cacheDir);
