@@ -70,7 +70,7 @@ function createMiddleware(cacheDir, verbose, viewEngine) {
 function createCache(req, res, cacheDir, verbose, viewEngine) {
     return function(filePath, data) {
 
-        viewEngine = viewEngine.toLowerCase();
+        viewEngine = viewEngine ? ('' + viewEngine).toLowerCase() || null;
         verbose && console.log(viewEngine);
 
         if(viewEngine === "ejs") {
